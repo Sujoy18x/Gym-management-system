@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "69ca1287d203ad14bd17a1a6",
+    "name": "Admin User",
+    "email": "admin@liftclub123.com",
+    "passwordHash": "$2b$10$6.JUhghSA1XkOLe8Qu2iO./TAHGGKCgXdrwYHNdeYHOWlUoiNagGO",
+    "role": "Owner",
+    "is2FAEnabled": true,
+    "emailSummaries": true,
+    "expiryAlerts": true,
+    "readAlertIds": [
+      "69ca1287d203ad14bd17a1a7",
+      "69ca1287d203ad14bd17a1a8",
+      "69ca1287d203ad14bd17a1aa",
+      "69ca1287d203ad14bd17a1ab",
+      "69ca1287d203ad14bd17a1af",
+      "69ca1287d203ad14bd17a1b2",
+      "69ca1287d203ad14bd17a1b7",
+      "69ca1287d203ad14bd17a1b8",
+      "69ca1e421618284c4e2764fb"
+    ],
+    "createdAt": "2026-03-30T06:04:55.274Z",
+    "updatedAt": "2026-04-04T05:18:09.852Z",
+    "__v": 1
+  }
+]
