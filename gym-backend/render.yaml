@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: liftclub-backend
+    env: node
+    plan: free
+    rootDir: gym-backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        fromConfig: true
+      - key: JWT_SECRET
+        fromConfig: true
+      - key: JWT_EXPIRES_IN
+        fromConfig: true
+      - key: TWILIO_ACCOUNT_SID
+        fromConfig: true
+      - key: TWILIO_AUTH_TOKEN
+        fromConfig: true
+      - key: TWILIO_PHONE_NUMBER
+        fromConfig: true
