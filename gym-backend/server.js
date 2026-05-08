@@ -22,6 +22,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://cosmic-tarsier-b2e6d7.netlify.app",
+  "https://gym-frontend-mu-three.vercel.app",
   process.env.FRONTEND_URL
 ].filter(Boolean);
 
