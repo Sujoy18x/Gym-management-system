@@ -31,18 +31,18 @@ export default function Charts({ chartData, loading }) {
   const activeExpired = chartData?.activeExpired || [];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 gap-6 mt-8 h-[900px] lg:h-[700px]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
       
       {/* Area Chart */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="glass rounded-2xl p-6 lg:col-span-2 lg:row-span-1 border border-black/5 dark:border-white/5 bg-white/70 dark:bg-black/40 relative group"
+        className="glass rounded-2xl p-6 lg:col-span-2 border border-black/5 dark:border-white/5 bg-white/70 dark:bg-black/40 relative group"
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#39ff14]/5 blur-[100px] pointer-events-none rounded-full" />
         <h3 className="text-lg font-semibold text-black dark:text-white mb-6">Monthly Member Growth</h3>
-        <div className="h-[calc(100%-40px)] w-full">
+        <div className="h-[300px] w-full">
           {loading ? <SkeletonBox className="h-full w-full" /> : (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={monthly} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -72,7 +72,7 @@ export default function Charts({ chartData, loading }) {
       >
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#39ff14]/10 blur-[80px] pointer-events-none rounded-full" />
         <h3 className="text-lg font-semibold text-black dark:text-white mb-6">Active vs Expired (Weekly)</h3>
-        <div className="h-[calc(100%-40px)] w-full">
+        <div className="h-[300px] w-full">
           {loading ? <SkeletonBox className="h-full w-full" /> : (
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={activeExpired} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
@@ -98,7 +98,7 @@ export default function Charts({ chartData, loading }) {
       >
         <div className="absolute top-0 right-0 w-32 h-32 bg-red-500/10 blur-[80px] pointer-events-none rounded-full" />
         <h3 className="text-lg font-semibold text-black dark:text-white mb-2">Plan Distribution</h3>
-        <div className="h-[calc(100%-40px)] w-full flex items-center justify-center">
+        <div className="h-[300px] w-full flex items-center justify-center">
           {loading ? <SkeletonBox className="h-full w-full" /> : (
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>

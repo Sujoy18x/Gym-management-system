@@ -15,7 +15,7 @@ export default function MemberTable() {
       setLoading(true);
       try {
         const { data } = await getMembers({ search: searchTerm });
-        setMembers(data.slice(0, 5));
+        setMembers(Array.isArray(data) ? data.slice(0, 5) : []);
       } catch (err) {
         console.error("MemberTable fetch error:", err);
       } finally {

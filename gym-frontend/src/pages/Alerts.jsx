@@ -92,7 +92,7 @@ export default function Alerts() {
         <p className="text-black/60 dark:text-white/60">Real-time alerts for expiring memberships and overdue accounts.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="flex flex-col gap-8">
         {/* Expiring Soon */}
         <div className="glass p-6 rounded-3xl border border-black/10 dark:border-white/10 bg-white/50 dark:bg-black/20">
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-black/10 dark:border-white/10">

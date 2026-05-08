@@ -20,4 +20,12 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const authorizeOwner = (req, res, next) => {
+  if (req.admin && req.admin.role === "Owner") {
+    next();
+  } else {
+    res.status(403).json({ message: "Not authorized as an Owner." });
+  }
+};
+
+module.exports = { protect, authorizeOwner };

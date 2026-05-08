@@ -116,4 +116,25 @@ const inviteStaff = async (req, res) => {
   }
 };
 
-module.exports = { getSettings, updateSettings, updateNotifications, getStaff, inviteStaff };
+// @desc    Remove staff
+// @route   DELETE /api/settings/staff/:email
+// @access  Protected
+const removeStaff = async (req, res) => {
+  try {
+    const emailToRemove = req.params.email;
+    const settings = await getOrCreateSettings();
+
+    // 1. Delete from Admin collection so they can no longer log in
+    await Admin.deleteOne({ email: emailToRemove });
+
+    // 2. Remove from settings array
+    settings.staff = settings.staff.filter(staff => staff.email !== emailToRemove);
+    await settings.save();
+
+    res.json({ message: "Staff removed successfully.", staff: settings.staff });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { getSettings, updateSettings, updateNotifications, getStaff, inviteStaff, removeStaff };

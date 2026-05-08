@@ -52,5 +52,6 @@ export const updateSettings       = (data) => API.put("/settings", data);
 export const updateNotifications  = (data) => API.put("/settings/notifications", data);
 export const getStaff             = () => API.get("/settings/staff");
 export const inviteStaff          = (data) => API.post("/settings/staff", data);
+export const removeStaff          = (email) => API.delete(`/settings/staff/${email}`);
 
 export default API;

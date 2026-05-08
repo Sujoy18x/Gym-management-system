@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import InviteStaffModal from "../components/InviteStaffModal";
 import Papa from "papaparse";
-import { getSettings, updateSettings, updateNotifications, inviteStaff, getStaff, getMembers } from "../services/api";
+import { getSettings, updateSettings, updateNotifications, inviteStaff, getStaff, getMembers, removeStaff } from "../services/api";
 import { changePassword } from "../services/api";
 
 // ─── Edit Staff Inline Modal ───────────────────────────────────────────────────
@@ -63,6 +63,96 @@ function EditStaffModal({ staff, onClose, onSave }) {
   );
 }
 
+// ─── Staff Credentials Modal ───────────────────────────────────────────────────
+function StaffCredentialsModal({ credentials, onClose }) {
+  return (
+    <div className="fixed inset-0 z-[250] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="relative w-full max-w-sm bg-white dark:bg-[#111] rounded-2xl border border-green-500/30 shadow-[0_0_30px_rgba(57,255,20,0.2)] p-6 z-10"
+      >
+        <div className="flex flex-col items-center text-center space-y-4">
+          <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/20">
+            <CheckCircle2 className="w-8 h-8 text-[#39ff14]" />
+          </div>
+          <h3 className="text-xl font-bold text-black dark:text-white">Staff Created!</h3>
+          <p className="text-sm text-black/70 dark:text-white/70">
+            Securely share these login credentials with <strong className="text-black dark:text-white">{credentials?.name}</strong>. They can log in immediately.
+          </p>
+          
+          <div className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl p-4 mt-4 space-y-3 text-left">
+            <div>
+              <p className="text-xs text-black/50 dark:text-white/50 uppercase tracking-wider font-semibold mb-1">Email / Username</p>
+              <p className="text-sm font-medium text-black dark:text-white bg-black/5 dark:bg-white/5 py-1.5 px-3 rounded-lg select-all">
+                {credentials?.email}
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-black/50 dark:text-white/50 uppercase tracking-wider font-semibold mb-1">Temporary Password</p>
+              <p className="text-lg font-mono font-bold text-[#39ff14] bg-black/90 py-2 px-3 rounded-lg select-all text-center tracking-widest border border-green-500/30">
+                {credentials?.tempPassword}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-full py-3 mt-4 bg-green-500 hover:bg-[#39ff14] text-black text-sm font-bold rounded-xl shadow-[0_0_15px_rgba(57,255,20,0.4)] transition-all"
+          >
+            I have copied the credentials
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Confirm Delete Inline Modal ───────────────────────────────────────────────
+function ConfirmDeleteModal({ staff, onClose, onConfirm }) {
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 20 }}
+        className="relative w-full max-w-sm bg-white dark:bg-[#111] rounded-2xl border border-black/10 dark:border-white/10 shadow-2xl p-6 z-10"
+      >
+        <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-[#39ff14] to-red-500 rounded-t-2xl" />
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-lg font-bold text-red-600 dark:text-red-500 flex items-center gap-2">
+            <Trash2 className="w-5 h-5" /> Delete Staff
+          </h3>
+          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+            <X className="w-4 h-4 text-black/50 dark:text-white/50" />
+          </button>
+        </div>
+        <div className="space-y-4">
+          <p className="text-sm text-black/70 dark:text-white/70">
+            Are you sure you want to delete <strong className="text-black dark:text-white">{staff?.name}</strong>?
+          </p>
+          <p className="text-xs text-red-500/80 bg-red-500/10 p-2 rounded-lg border border-red-500/20">
+            This will permanently revoke their login access to the dashboard. This action cannot be undone.
+          </p>
+        </div>
+        <div className="flex gap-3 mt-6">
+          <button onClick={onClose} className="flex-1 py-2.5 rounded-lg border border-black/10 dark:border-white/10 text-sm font-medium text-black/70 dark:text-white/70 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg shadow-[0_0_10px_rgba(220,38,38,0.4)] transition-all"
+          >
+            Delete
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 // ─── Main Settings Page ────────────────────────────────────────────────────────
 export default function Settings() {
   const { isDarkMode, toggleTheme } = useTheme();
@@ -85,6 +175,8 @@ export default function Settings() {
 
   // Edit staff
   const [editingStaff, setEditingStaff] = useState(null); // {index, staff}
+  const [deletingStaff, setDeletingStaff] = useState(null); // {index, staff}
+  const [newCredentials, setNewCredentials] = useState(null); // {name, email, tempPassword}
 
   // Modals
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
@@ -200,9 +292,13 @@ export default function Settings() {
 
       showToast(`Invited ${newStaff.name} as ${newStaff.role}`);
       
-      // Provide the temporary password securely on the screen!
+      // Provide the temporary password securely via custom modal
       if (data && data.tempPassword) {
-        window.alert(`Staff account created successfully!\n\nPlease securely copy this temporary login password and send it to ${newStaff.name}:\n\nPassword: ${data.tempPassword}\n\nThey can log in immediately using this password.`);
+        setNewCredentials({
+          name: newStaff.name,
+          email: newStaff.email,
+          tempPassword: data.tempPassword
+        });
       }
 
     } catch (err) {
@@ -224,15 +320,28 @@ export default function Settings() {
     }
   };
 
-  const handleRemoveStaff = async (index) => {
-    if (!window.confirm("Remove this staff member?")) return;
-    const updated = staffList.filter((_, i) => i !== index);
+  const handleRemoveStaffClick = (index) => {
+    setDeletingStaff({ index, staff: staffList[index] });
+  };
+
+  const confirmRemoveStaff = async () => {
+    if (!deletingStaff) return;
+    const { index, staff } = deletingStaff;
+    if (!staff || !staff.email) {
+      showToast("Error: Missing staff data.");
+      setDeletingStaff(null);
+      return;
+    }
     try {
-      await updateSettings({ staff: updated });
+      await removeStaff(staff.email);
+      const updated = staffList.filter((_, i) => i !== index);
       setStaffList(updated);
       showToast("Staff member removed.");
     } catch (err) {
+      console.error("removeStaff error:", err);
       showToast("Failed to remove staff.");
+    } finally {
+      setDeletingStaff(null);
     }
   };
 
@@ -516,7 +625,7 @@ export default function Settings() {
                       </button>
                       {i !== 0 && ( // prevent deleting the owner
                         <button
-                          onClick={() => handleRemoveStaff(i)}
+                          onClick={() => handleRemoveStaffClick(i)}
                           className="p-1.5 text-black/30 dark:text-white/30 hover:text-red-500 rounded-lg hover:bg-red-500/10 transition-all"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -596,6 +705,27 @@ export default function Settings() {
             staff={editingStaff.staff}
             onClose={() => setEditingStaff(null)}
             onSave={handleSaveStaffEdit}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Confirm Delete Staff Modal */}
+      <AnimatePresence>
+        {deletingStaff && (
+          <ConfirmDeleteModal
+            staff={deletingStaff.staff}
+            onClose={() => setDeletingStaff(null)}
+            onConfirm={confirmRemoveStaff}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Staff Credentials Modal */}
+      <AnimatePresence>
+        {newCredentials && (
+          <StaffCredentialsModal
+            credentials={newCredentials}
+            onClose={() => setNewCredentials(null)}
           />
         )}
       </AnimatePresence>

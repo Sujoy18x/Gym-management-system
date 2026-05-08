@@ -3,7 +3,7 @@ services:
     name: liftclub-backend
     env: node
     plan: free
-    rootDir: gym-backend
+    rootDir: .
     buildCommand: npm install
     startCommand: node server.js
     envVars:
