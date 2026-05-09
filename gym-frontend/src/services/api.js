@@ -1,7 +1,14 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://gym-backend-topaz-three.vercel.app/api";
+let envUrl = import.meta.env.VITE_API_URL || "https://gym-backend-topaz-three.vercel.app/api";
 
+// Auto-fix if the user forgot to add "/api" to the end of the URL in Vercel settings
+if (envUrl && !envUrl.endsWith("/api")) {
+  if (envUrl.endsWith("/")) envUrl = envUrl.slice(0, -1);
+  envUrl += "/api";
+}
+
+const API_URL = envUrl;
 const API = axios.create({
   baseURL: API_URL,
 });
